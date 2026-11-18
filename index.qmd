@@ -1,0 +1,170 @@
+---
+title: "The 2026 Midterms, in context"
+subtitle: "National overview · Election day: November 3, 2026"
+description: "A historical guide to U.S. midterm elections, with a transparent illustrative 2026 scenario."
+---
+
+::: {.lead}
+Midterms are a national referendum with 435 local House contests, a smaller but consequential Senate map, and turnout that tends to lag presidential years. This edition pairs historical House results with an **illustrative 2026 scenario**: modeled figures are not reported polls, fundraising disclosures, or election returns.
+:::
+
+```{r}
+#| label: historical-data
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+midterms <- tribble(
+  ~year, ~president_party, ~house_change,
+  1946, "Democratic", -55,
+  1950, "Democratic", -28,
+  1954, "Republican", -18,
+  1958, "Republican", -48,
+  1962, "Democratic", -4,
+  1966, "Democratic", -47,
+  1970, "Republican", -12,
+  1974, "Republican", -48,
+  1978, "Democratic", -15,
+  1982, "Republican", -26,
+  1986, "Republican", -5,
+  1990, "Republican", -8,
+  1994, "Democratic", -54,
+  1998, "Democratic", 5,
+  2002, "Republican", 8,
+  2006, "Republican", -30,
+  2010, "Democratic", -63,
+  2014, "Democratic", -13,
+  2018, "Republican", -41,
+  2022, "Democratic", -9
+) |>
+  arrange(year) |>
+  mutate(
+    rolling_average = vapply(
+      seq_along(house_change),
+      \(i) if (i >= 5) mean(house_change[(i - 4):i]) else NA_real_,
+      numeric(1)
+    ),
+    label = paste0(year, " · ", president_party, " president")
+  )
+```
+
+::: {.kpi-grid}
+::: {.kpi-card}
+<span class="kpi-label">House seats on the ballot</span>
+
+<span class="kpi-value">435</span>
+
+<span class="kpi-note">Every voting seat; the chamber majority is 218.</span>
+:::
+
+::: {.kpi-card}
+<span class="kpi-label">Regular Senate seats</span>
+
+<span class="kpi-value">33</span>
+
+<span class="kpi-note">One-third of the Senate's staggered terms.</span>
+:::
+
+::: {.kpi-card}
+<span class="kpi-label">Average president-party House change</span>
+
+<span class="kpi-value">`r sprintf("%+.1f", mean(midterms$house_change))`</span>
+
+<span class="kpi-note">Seats gained or lost per midterm, 1946–2022.</span>
+:::
+:::
+
+## The midterm pattern
+
+The president's party has usually lost House seats at the first election between presidential contests. The exceptions matter: national conditions, candidate quality, district boundaries, and the particular seats at stake can all overwhelm the average. The bars below show the House seat change for the president's party; the line smooths the record with a five-election rolling average.
+
+```{r}
+#| label: historical-midterms
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+midterm_plot <- plot_ly(
+  data = midterms,
+  x = ~year,
+  y = ~house_change,
+  type = "bar",
+  name = "House seats",
+  marker = list(color = ifelse(midterms$house_change < 0, "#c7473a", "#187f78")),
+  text = ~paste0(label, "<br>House seats: ", ifelse(house_change > 0, "+", ""), house_change),
+  hoverinfo = "text"
+) |>
+  add_lines(
+    x = ~year, y = ~rolling_average,
+    name = "Five-midterm average",
+    line = list(color = "#243b53", width = 3),
+    hovertemplate = "%{x}: %{y:.1f} seats<extra>Five-midterm average</extra>"
+  ) |>
+  layout(
+    xaxis = list(title = NULL, dtick = 4),
+    yaxis = list(title = "House seats gained / lost", zeroline = TRUE),
+    barmode = "overlay",
+    legend = list(orientation = "h", x = 0, y = 1.12),
+    margin = list(t = 30, b = 50),
+    hovermode = "x unified"
+  ) |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+
+midterm_plot
+```
+
+::: {.source-note}
+Historical series: net change in House seats for the president's party at each midterm, compiled from official election results. A negative value is a loss. The rolling line begins after five observations.
+:::
+
+## Races to watch
+
+The table highlights a sample of Senate and House battlegrounds, not an exhaustive race list. Candidate names, polling margins, and fundraising amounts are intentionally omitted where this site has no verified live source; see the [state comparison](swing-states.qmd) for clearly marked scenario inputs.
+
+```{r}
+#| label: key-races-table
+#| echo: false
+#| warning: false
+#| message: false
+key_races <- tribble(
+  ~Race, ~Office, ~State, ~Context,
+  "U.S. Senate", "Senate", "Georgia", "Competitive statewide contest",
+  "U.S. Senate", "Senate", "Michigan", "Competitive statewide contest",
+  "U.S. Senate", "Senate", "North Carolina", "Competitive statewide contest",
+  "U.S. Senate", "Senate", "Ohio", "Competitive statewide contest",
+  "PA-07", "House", "Pennsylvania", "Lehigh Valley and Northampton County",
+  "WI-03", "House", "Wisconsin", "Western Wisconsin",
+  "AZ-01", "House", "Arizona", "Phoenix-area suburban district",
+  "NV-03", "House", "Nevada", "Las Vegas-area suburban district"
+)
+
+DT::datatable(
+  key_races,
+  rownames = FALSE,
+  filter = "top",
+  options = list(
+    pageLength = 8,
+    dom = "tip",
+    order = list(),
+    autoWidth = TRUE
+  ),
+  caption = htmltools::tags$caption(
+    style = "caption-side: top; text-align: left;",
+    "Selected illustrative battlegrounds · filter any column"
+  )
+)
+```
+
+## How to read this edition
+
+The historical chart is retrospective; the battleground comparisons and turnout page are planning scenarios, not a forecast or a statement of certified 2026 outcomes. A projected margin is measured in percentage points, with positive values favoring the Democratic candidate in the scenario. Replace the scenario inputs with linked, dated sources before using them as current reporting.
+
+::: {.callout-note}
+**A note on uncertainty.** A generic margin-of-error band is not a substitute for a poll's sample design, field dates, likely-voter model, or aggregation method. Scenario inputs on this site are labeled as such and should not be read as polling.
+:::

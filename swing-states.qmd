@@ -1,0 +1,134 @@
+---
+title: "Battlegrounds: the close contests"
+subtitle: "Eight state-level snapshots · scenario data, not live polling"
+description: "Illustrative Senate and House battleground margins and campaign finance comparisons."
+---
+
+The map is a mix of statewide Senate contests and competitive House districts. The figures below are **synthetic scenario inputs** designed to show how to compare races: they are not actual polls, campaign disclosures, or official Cook Political Report ratings. “Rating” is a Cook-style label for this demonstration only.
+
+## Margin and uncertainty
+
+The dot is the scenario's Democratic two-party margin; positive values favor the Democratic candidate. The horizontal interval shows an assumed ±4-point uncertainty band, not a poll's published margin of error.
+
+```{r}
+#| label: battleground-data
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+battlegrounds <- tribble(
+  ~state, ~race, ~office, ~dem_candidate, ~rep_candidate, ~margin, ~uncertainty, ~dem_funds, ~rep_funds, ~rating,
+  "PA", "PA-07", "House", "Democratic candidate", "Republican candidate", 1.5, 4.0, 5.2, 6.1, "Toss-up",
+  "MI", "Senate", "Senate", "Democratic candidate", "Republican candidate", 2.0, 3.8, 24.0, 21.5, "Toss-up",
+  "WI", "WI-03", "House", "Democratic candidate", "Republican candidate", -1.0, 4.2, 3.8, 4.7, "Lean R",
+  "AZ", "AZ-01", "House", "Democratic candidate", "Republican candidate", 0.5, 4.1, 4.5, 5.0, "Toss-up",
+  "GA", "Senate", "Senate", "Democratic candidate", "Republican candidate", -0.5, 4.0, 19.0, 22.0, "Toss-up",
+  "NV", "NV-03", "House", "Democratic candidate", "Republican candidate", 1.0, 4.3, 5.0, 4.4, "Toss-up",
+  "NC", "Senate", "Senate", "Democratic candidate", "Republican candidate", -2.0, 4.0, 17.0, 23.0, "Lean R",
+  "OH", "Senate", "Senate", "Democratic candidate", "Republican candidate", -3.0, 4.2, 15.0, 26.0, "Lean R"
+) |>
+  mutate(
+    race_label = paste(state, race, sep = " · "),
+    dem_share = 50 + margin / 2,
+    total_funds = dem_funds + rep_funds,
+    funding_leader = if_else(dem_funds >= rep_funds, "Democratic", "Republican"),
+    hover = paste0(
+      race_label,
+      "<br>Combined scenario funds: $", round(total_funds, 1), "m",
+      "<br>Modeled Democratic share: ", round(dem_share, 1), "%",
+      "<br>Democratic funds: $", dem_funds, "m",
+      "<br>Republican funds: $", rep_funds, "m"
+    )
+  )
+
+margin_chart <- plot_ly(
+  data = battlegrounds,
+  x = ~margin,
+  y = ~reorder(race_label, margin),
+  type = "scatter",
+  mode = "markers",
+  color = ~office,
+  colors = c("Senate" = "#c7473a", "House" = "#187f78"),
+  error_x = list(
+    type = "data",
+    array = battlegrounds$uncertainty,
+    visible = TRUE,
+    color = "#7b8794",
+    thickness = 1.5,
+    width = 5
+  ),
+  marker = list(size = 12),
+  text = ~paste0(
+    race_label,
+    "<br>Scenario Democratic margin: ", if_else(margin > 0, "+", ""), margin, " pp",
+    "<br>Assumed uncertainty: ±", uncertainty, " pp",
+    "<br>Illustrative rating: ", rating
+  ),
+  hoverinfo = "text"
+) |>
+  layout(
+    xaxis = list(title = "Democratic two-party margin (percentage points)", zeroline = TRUE, zerolinecolor = "#243b53"),
+    yaxis = list(title = NULL),
+    legend = list(orientation = "h", x = 0, y = 1.12),
+    margin = list(l = 120, t = 25),
+    hovermode = "closest"
+  ) |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+
+margin_chart
+```
+
+## Fundraising and modeled vote share
+
+Each point is a race. The horizontal axis combines both candidates' scenario fundraising totals; the vertical axis translates the assumed margin into a Democratic two-party vote share. A larger combined fundraising total does not imply a closer race or a causal effect on vote share.
+
+```{r}
+#| label: fundraising-scatter
+#| echo: false
+#| warning: false
+#| message: false
+fundraising_chart <- plot_ly(
+  data = battlegrounds,
+  x = ~total_funds,
+  y = ~dem_share,
+  type = "scatter",
+  mode = "markers",
+  color = ~rating,
+  colors = c("Toss-up" = "#c7473a", "Lean R" = "#187f78"),
+  text = ~hover,
+  marker = list(size = 15, line = list(color = "white", width = 1)),
+  hoverinfo = "text"
+) |>
+  layout(
+    xaxis = list(title = "Combined candidate fundraising (illustrative $ millions)"),
+    yaxis = list(title = "Modeled Democratic two-party vote share (%)", range = c(45, 55)),
+    legend = list(title = list(text = "Illustrative rating")),
+    margin = list(t = 20),
+    hovermode = "closest"
+  ) |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+
+fundraising_chart
+```
+
+::: {.source-note}
+All margins, uncertainty bands, fundraising totals, modeled shares, and ratings in these charts are fabricated for demonstration. State/race labels identify plausible contest types; candidates are intentionally unnamed. Fundraising is in illustrative millions of dollars, with no claim about actual receipts or disbursements.
+:::
+
+## Scenario inputs
+
+| State | Example contest | Rating label | Scenario margin |
+|:--|:--|:--|--:|
+| Pennsylvania | PA-07 (House) | Toss-up | +1.5 pp |
+| Michigan | Senate | Toss-up | +2.0 pp |
+| Wisconsin | WI-03 (House) | Lean R | −1.0 pp |
+| Arizona | AZ-01 (House) | Toss-up | +0.5 pp |
+| Georgia | Senate | Toss-up | −0.5 pp |
+| Nevada | NV-03 (House) | Toss-up | +1.0 pp |
+| North Carolina | Senate | Lean R | −2.0 pp |
+| Ohio | Senate | Lean R | −3.0 pp |
+
+These are a teaching dataset, not a ranking. A serious race comparison should date each poll and finance report, distinguish candidate committees from outside spending, and document the rating source.

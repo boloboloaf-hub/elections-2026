@@ -1,0 +1,120 @@
+---
+title: "Who votes—and who might turn out?"
+subtitle: "Age, education, and place · historical-style benchmarks and a 2026 scenario"
+description: "Illustrative midterm turnout rates by age, educational attainment, and community type."
+---
+
+Midterm participation is uneven. Age, education, and where a person lives are associated with different turnout rates, but the differences are not fixed from one election to the next. The chart combines rounded, **illustrative benchmark estimates** for 2018 and 2022 with a **modeled 2026 scenario**. None should be read as certified official demographic counts.
+
+## Participation by group
+
+The bars compare each group's estimated turnout in the three midterm cycles. The 2026 values are scenario projections, not exit polls or post-election estimates. Group categories are broad and can conceal large differences within each group.
+
+```{r}
+#| label: turnout-data
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+turnout <- tribble(
+  ~dimension, ~group, ~year, ~turnout,
+  "Age", "18–29", 2018, 36,
+  "Age", "18–29", 2022, 31,
+  "Age", "18–29", 2026, 37,
+  "Age", "30–44", 2018, 47,
+  "Age", "30–44", 2022, 43,
+  "Age", "30–44", 2026, 48,
+  "Age", "45–64", 2018, 58,
+  "Age", "45–64", 2022, 54,
+  "Age", "45–64", 2026, 59,
+  "Age", "65+", 2018, 66,
+  "Age", "65+", 2022, 64,
+  "Age", "65+", 2026, 67,
+  "Education", "High school or less", 2018, 42,
+  "Education", "High school or less", 2022, 39,
+  "Education", "High school or less", 2026, 43,
+  "Education", "Some college", 2018, 49,
+  "Education", "Some college", 2022, 45,
+  "Education", "Some college", 2026, 50,
+  "Education", "Bachelor's degree", 2018, 60,
+  "Education", "Bachelor's degree", 2022, 56,
+  "Education", "Bachelor's degree", 2026, 61,
+  "Education", "Graduate degree", 2018, 66,
+  "Education", "Graduate degree", 2022, 63,
+  "Education", "Graduate degree", 2026, 67,
+  "Community type", "Urban", 2018, 49,
+  "Community type", "Urban", 2022, 45,
+  "Community type", "Urban", 2026, 50,
+  "Community type", "Suburban", 2018, 57,
+  "Community type", "Suburban", 2022, 53,
+  "Community type", "Suburban", 2026, 58,
+  "Community type", "Rural", 2018, 54,
+  "Community type", "Rural", 2022, 51,
+  "Community type", "Rural", 2026, 55
+) |>
+  mutate(
+    year = factor(year, levels = c(2018, 2022, 2026)),
+    group = factor(group, levels = unique(group)),
+    status = if_else(year == "2026", "Projection", "Illustrative benchmark"),
+    hover = paste0(
+      dimension, ": ", group,
+      "<br>", year, if_else(year == "2026", " projection", " benchmark"),
+      "<br>Illustrative turnout: ", turnout, "%"
+    )
+  )
+
+turnout_plot <- ggplot(
+  turnout,
+  aes(x = group, y = turnout, fill = year, text = hover)
+) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.68) +
+  facet_wrap(~dimension, scales = "free_x", nrow = 1) +
+  scale_fill_manual(
+    values = c("2018" = "#243b53", "2022" = "#187f78", "2026" = "#e7a63f"),
+    name = "Midterm"
+  ) +
+  scale_y_continuous(
+    limits = c(0, 75),
+    breaks = seq(0, 75, by = 15),
+    labels = \(x) paste0(x, "%"),
+    expand = expansion(mult = c(0, 0.03))
+  ) +
+  labs(
+    x = NULL,
+    y = "Illustrative turnout rate",
+    title = "Participation varies across age, education, and community",
+    subtitle = "2026 is a modeled scenario; 2018 and 2022 are illustrative benchmarks",
+    caption = "Scenario values are for demonstration, not official demographic estimates."
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "top",
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    strip.text = element_text(face = "bold", color = "#243b53"),
+    axis.text.x = element_text(angle = 25, hjust = 1),
+    plot.title = element_text(face = "bold", color = "#243b53")
+  )
+
+ggplotly(turnout_plot, tooltip = "text") |>
+  layout(legend = list(orientation = "h", x = 0, y = 1.15)) |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+```
+
+::: {.callout-important}
+**Projection ≠ result.** The 2026 bars show a scenario assumption only. Turnout estimates depend on the population denominator, eligibility rules, survey design, and whether rates are measured among citizens, voting-age residents, or eligible voters.
+:::
+
+## What the comparison can—and cannot—show
+
+- **Age:** Older voters tend to participate at higher rates in midterms, so shifts in the age mix of the electorate can change the overall result even when group-level preferences stay constant.
+- **Education:** Educational attainment is associated with participation, but it is also correlated with age, income, geography, and other factors. These bars do not isolate a causal effect.
+- **Community type:** Urban, suburban, and rural categories vary by definition and state. A national-style comparison can hide important local patterns.
+- **2026:** Treat the final column as a transparent placeholder for a forecast. Replace it with a named, dated, documented source before drawing conclusions about the actual electorate.
+
+::: {.source-note}
+The demographic values are deliberately rounded, synthetic examples. They are not sourced estimates, survey results, Census counts, or certified 2026 turnout. The chart demonstrates a comparison workflow and should be updated with documented data before publication as factual analysis.
+:::

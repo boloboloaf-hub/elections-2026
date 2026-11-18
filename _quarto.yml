@@ -1,0 +1,23 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "The Midterm Ledger"
+  navbar:
+    background: dark
+    foreground: light
+    left:
+      - href: index.qmd
+        text: National overview
+      - href: swing-states.qmd
+        text: Battlegrounds
+      - href: turnout-demographics.qmd
+        text: Turnout & demographics
+
+format:
+  html:
+    theme: lux
+    css: styles.css
+    toc: true
+    toc-location: right
