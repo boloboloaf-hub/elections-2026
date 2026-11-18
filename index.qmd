@@ -16,7 +16,7 @@ Democrats won control of both chambers, ending the Republican trifecta. Some vot
 ::: {.kpi-card .dem-card}
 <span class="kpi-label">House control</span>
 
-<span class="kpi-value">Democratic</span>
+<span class="kpi-value">Dem Flip</span>
 
 <span class="kpi-note">CBS News estimated 254–267 Democratic seats on Nov. 11; final count pending in that report.</span>
 :::

@@ -47,8 +47,8 @@ h1 {
 }
 
 .hero {
-  margin: 0.75rem 0 2rem;
-  padding: clamp(1.5rem, 4vw, 3.25rem);
+  margin: 1.5rem 0 2rem;
+  padding: clamp(1.75rem, 4vw, 3.25rem);
   border-radius: 0.6rem;
   background:
     radial-gradient(circle at 90% 15%, rgb(212 168 79 / 28%), transparent 30%),
@@ -83,17 +83,21 @@ h1 {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
+  align-items: stretch;
   margin: 1.5rem 0 2.5rem;
 }
 
 .kpi-card {
+  min-width: 0;
   min-height: 150px;
   padding: 1.15rem 1.25rem;
+  box-sizing: border-box;
   border: 1px solid var(--rule);
   border-top: 4px solid var(--gold);
   border-radius: 0.45rem;
   background: var(--paper);
   box-shadow: 0 4px 14px rgb(15 23 42 / 6%);
+  overflow-wrap: break-word;
 }
 
 .kpi-card.dem-card {
@@ -118,9 +122,10 @@ h1 {
   margin: 0.2rem 0 0.35rem;
   color: var(--ink);
   font-family: Georgia, "Times New Roman", serif;
-  font-size: clamp(1.75rem, 2.4vw, 2.4rem);
+  font-size: clamp(1.4rem, 2.2vw, 2rem);
   font-weight: 700;
   line-height: 1.15;
+  overflow-wrap: break-word;
 }
 
 .kpi-note {
