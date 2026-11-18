@@ -1,15 +1,137 @@
 ---
 title: "The 2026 Midterms, in context"
 subtitle: "National overview · Election day: November 3, 2026"
-description: "A historical guide to U.S. midterm elections, with a transparent illustrative 2026 scenario."
+description: "A source-dated account of 2026 U.S. midterm outcomes and the historical record."
 ---
 
-::: {.lead}
-Midterms are a national referendum with 435 local House contests, a smaller but consequential Senate map, and turnout that tends to lag presidential years. This edition pairs historical House results with an **illustrative 2026 scenario**: modeled figures are not reported polls, fundraising disclosures, or election returns.
+::: {.hero}
+<p class="eyebrow">THE MIDTERM LEDGER · ELECTION NIGHT TO THE COUNT</p>
+
+# A Democratic wave reshapes Congress
+
+Democrats won control of both chambers, ending the Republican trifecta. Some vote counts were still incomplete in the latest reporting used here; estimates and projections are labeled rather than presented as certified totals.
 :::
 
+::: {.kpi-grid}
+::: {.kpi-card .dem-card}
+<span class="kpi-label">House control</span>
+
+<span class="kpi-value">Democratic</span>
+
+<span class="kpi-note">CBS News estimated 254–267 Democratic seats on Nov. 11; final count pending in that report.</span>
+:::
+
+::: {.kpi-card .dem-card}
+<span class="kpi-label">Senate balance</span>
+
+<span class="kpi-value">56D–44R</span>
+
+<span class="kpi-note">CBS News projection after Mary Peltola's Alaska win, reported Nov. 17.</span>
+:::
+
+::: {.kpi-card}
+<span class="kpi-label">House vote margin</span>
+
+<span class="kpi-value">≈ D+14</span>
+
+<span class="kpi-note">Unofficial House vote lead as of Nov. 11; polling error was 4.7 points.</span>
+:::
+
+::: {.kpi-card}
+<span class="kpi-label">Turnout context</span>
+
+<span class="kpi-value">2nd-highest</span>
+
+<span class="kpi-note">2026 midterm turnout rank since 1914; an exact national rate was not reported in the source.</span>
+:::
+:::
+
+## Chamber balance: 2024 to 2026
+
+The 119th Congress convened with narrow Republican control. For the 120th Congress, CBS News projected a Democratic House range of 254–267 seats on Nov. 11 and later projected a 56–44 Democratic Senate after Alaska was called. The House bars show the midpoint of the reported range for visual comparison only; whiskers show its full range.
+
 ```{r}
-#| label: historical-data
+#| label: chamber-composition
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+composition <- tribble(
+  ~Congress, ~Chamber, ~Party, ~Seats, ~Low, ~High,
+  "119th (2025–27)", "House", "Democratic", 215, 215, 215,
+  "119th (2025–27)", "House", "Republican", 220, 220, 220,
+  "119th (2025–27)", "Senate", "Democratic", 47, 47, 47,
+  "119th (2025–27)", "Senate", "Republican", 53, 53, 53,
+  "120th (2027–29)", "House", "Democratic", 260.5, 254, 267,
+  "120th (2027–29)", "House", "Other / not Democratic", 174.5, 168, 181,
+  "120th (2027–29)", "Senate", "Democratic", 56, 56, 56,
+  "120th (2027–29)", "Senate", "Republican", 44, 44, 44
+) |>
+  mutate(
+    category = paste(Chamber, Congress, sep = " · "),
+    hover = paste0(
+      Congress, "<br>", Chamber, " · ", Party, ": ",
+      if_else(Low == High, as.character(Seats), paste0(Low, "–", High)),
+      " seats",
+      if_else(Low != High, "<br>Bar height uses range midpoint; whiskers show range.", "")
+    )
+  )
+
+composition_plot <- plot_ly(
+  data = composition,
+  x = ~category,
+  y = ~Seats,
+  color = ~Party,
+  colors = c(
+    "Democratic" = "#1d4ed8",
+    "Republican" = "#b91c1c",
+    "Other / not Democratic" = "#64748b"
+  ),
+  type = "bar",
+  text = ~hover,
+  hoverinfo = "text",
+  error_y = list(
+    type = "data",
+    array = composition$High - composition$Seats,
+    arrayminus = composition$Seats - composition$Low,
+    visible = TRUE,
+    color = "#334155",
+    thickness = 1.5,
+    width = 5
+  ),
+  xaxis = "x",
+  yaxis = "y"
+) |>
+  layout(
+    barmode = "group",
+    xaxis = list(title = NULL),
+    yaxis = list(title = "Seats", rangemode = "tozero"),
+    legend = list(orientation = "h", x = 0, y = 1.12),
+    margin = list(t = 30, b = 50),
+    annotations = list(
+      list(x = 0.5, y = 0.99, xref = "paper", yref = "paper",
+           text = "House / Senate series share colors; hover for each range.",
+           showarrow = FALSE, font = list(size = 11, color = "#64748b"))
+    )
+  ) |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+
+composition_plot
+```
+
+::: {.source-note}
+The 119th Congress composition reflects the post-2024 election starting balance (House: 215 Democrats, 220 Republicans; Senate: 47 Democratic caucus members, 53 Republicans). For 2026, the House range is CBS News' Nov. 11 estimate and the Senate balance is CBS News' Nov. 17 projection. Sources: [CBS House and Senate overview](https://www.cbsnews.com/news/2026-midterm-election-results-where-democrats-won/), [CBS Alaska Senate result](https://www.cbsnews.com/news/alaska-2026-senate-sullivan-peltola/). The 2026 House non-Democratic range is the mathematical remainder from 435; it is not labeled as an all-Republican count.
+:::
+
+## The president's party and House losses
+
+The bars show House seat change for the president's party at each midterm. The 2026 result is intentionally not plotted as an exact seat swing: available reporting confirms Democratic control but gives a range, not a final certified count.
+
+```{r}
+#| label: historical-midterms
 #| echo: false
 #| warning: false
 #| message: false
@@ -42,129 +164,89 @@ midterms <- tribble(
 ) |>
   arrange(year) |>
   mutate(
-    rolling_average = vapply(
+    average = vapply(
       seq_along(house_change),
       \(i) if (i >= 5) mean(house_change[(i - 4):i]) else NA_real_,
       numeric(1)
     ),
-    label = paste0(year, " · ", president_party, " president")
+    hover = paste0(year, " · ", president_party, " president",
+                   "<br>President-party House change: ", house_change, " seats")
   )
-```
 
-::: {.kpi-grid}
-::: {.kpi-card}
-<span class="kpi-label">House seats on the ballot</span>
-
-<span class="kpi-value">435</span>
-
-<span class="kpi-note">Every voting seat; the chamber majority is 218.</span>
-:::
-
-::: {.kpi-card}
-<span class="kpi-label">Regular Senate seats</span>
-
-<span class="kpi-value">33</span>
-
-<span class="kpi-note">One-third of the Senate's staggered terms.</span>
-:::
-
-::: {.kpi-card}
-<span class="kpi-label">Average president-party House change</span>
-
-<span class="kpi-value">`r sprintf("%+.1f", mean(midterms$house_change))`</span>
-
-<span class="kpi-note">Seats gained or lost per midterm, 1946–2022.</span>
-:::
-:::
-
-## The midterm pattern
-
-The president's party has usually lost House seats at the first election between presidential contests. The exceptions matter: national conditions, candidate quality, district boundaries, and the particular seats at stake can all overwhelm the average. The bars below show the House seat change for the president's party; the line smooths the record with a five-election rolling average.
-
-```{r}
-#| label: historical-midterms
-#| echo: false
-#| warning: false
-#| message: false
-library(tidyverse)
-library(ggplot2)
-library(plotly)
-
-midterm_plot <- plot_ly(
+historical_plot <- plot_ly(
   data = midterms,
   x = ~year,
   y = ~house_change,
   type = "bar",
-  name = "House seats",
-  marker = list(color = ifelse(midterms$house_change < 0, "#c7473a", "#187f78")),
-  text = ~paste0(label, "<br>House seats: ", ifelse(house_change > 0, "+", ""), house_change),
+  name = "House seat change",
+  marker = list(color = ifelse(midterms$house_change < 0, "#b91c1c", "#1d4ed8")),
+  text = ~hover,
   hoverinfo = "text"
 ) |>
   add_lines(
-    x = ~year, y = ~rolling_average,
+    x = ~year,
+    y = ~average,
     name = "Five-midterm average",
-    line = list(color = "#243b53", width = 3),
+    line = list(color = "#172554", width = 3),
     hovertemplate = "%{x}: %{y:.1f} seats<extra>Five-midterm average</extra>"
   ) |>
   layout(
-    xaxis = list(title = NULL, dtick = 4),
-    yaxis = list(title = "House seats gained / lost", zeroline = TRUE),
-    barmode = "overlay",
+    xaxis = list(title = NULL, dtick = 4, range = c(1944, 2028)),
+    yaxis = list(title = "Seats gained / lost", zeroline = TRUE),
     legend = list(orientation = "h", x = 0, y = 1.12),
     margin = list(t = 30, b = 50),
-    hovermode = "x unified"
+    annotations = list(
+      list(x = 2026, y = 0, xref = "x", yref = "y",
+           text = "2026: Democratic control; exact House swing pending",
+           showarrow = TRUE, ax = -90, ay = -55,
+           font = list(size = 11, color = "#334155"))
+    )
   ) |>
   config(displayModeBar = FALSE, responsive = TRUE)
 
-midterm_plot
+historical_plot
 ```
 
 ::: {.source-note}
-Historical series: net change in House seats for the president's party at each midterm, compiled from official election results. A negative value is a loss. The rolling line begins after five observations.
+Historical seat changes are the net change in House seats for the president's party at midterm elections, compiled from official election results. 2018 is shown as a 41-seat Republican loss, consistent with the final House net change. The 2026 annotation is not a numeric result. Source context: [Office of the Historian, U.S. House](https://history.house.gov/Institution/Party-Divisions/Party-Divisions/).
 :::
 
-## Races to watch
+## Selected 2026 results
 
-The table highlights a sample of Senate and House battlegrounds, not an exhaustive race list. Candidate names, polling margins, and fundraising amounts are intentionally omitted where this site has no verified live source; see the [state comparison](swing-states.qmd) for clearly marked scenario inputs.
+These are projected outcomes reported by CBS News, not a substitute for state-certified canvasses. Percentages are included only where the cited source reported a dated figure; other vote totals are left out rather than inferred.
 
 ```{r}
 #| label: key-races-table
 #| echo: false
 #| warning: false
 #| message: false
+library(tidyverse)
+
 key_races <- tribble(
-  ~Race, ~Office, ~State, ~Context,
-  "U.S. Senate", "Senate", "Georgia", "Competitive statewide contest",
-  "U.S. Senate", "Senate", "Michigan", "Competitive statewide contest",
-  "U.S. Senate", "Senate", "North Carolina", "Competitive statewide contest",
-  "U.S. Senate", "Senate", "Ohio", "Competitive statewide contest",
-  "PA-07", "House", "Pennsylvania", "Lehigh Valley and Northampton County",
-  "WI-03", "House", "Wisconsin", "Western Wisconsin",
-  "AZ-01", "House", "Arizona", "Phoenix-area suburban district",
-  "NV-03", "House", "Nevada", "Las Vegas-area suburban district"
+  ~State, ~Office, ~Winner, ~Party, ~Opponent, ~reported_result,
+  "Maine", "Senate", "Troy Jackson", "Democratic", "Susan Collins", "CBS projected win",
+  "North Carolina", "Senate", "Roy Cooper", "Democratic", "Michael Whatley", "CBS projected win",
+  "Michigan", "Senate", "Abdul El-Sayed", "Democratic", "Mike Rogers", "CBS projected win",
+  "Ohio", "Senate", "Sherrod Brown", "Democratic", "Jon Husted", "CBS projected win",
+  "Georgia", "Senate", "Jon Ossoff", "Democratic", "Republican challenger", "CBS projected hold",
+  "New Hampshire", "Senate", "Chris Pappas", "Democratic", "Republican challenger", "CBS projected win",
+  "Texas", "Senate", "James Talarico", "Democratic", "Ken Paxton", "CBS projected win",
+  "Florida", "Senate", "Ashley Moody", "Republican", "Democratic challenger", "CBS projected hold",
+  "Georgia", "Governor", "Keisha Lance Bottoms", "Democratic", "Rick Jackson", "54.3% to 45.7%; 99% counted Nov. 11",
+  "Texas", "Governor", "Gina Hinojosa", "Democratic", "Greg Abbott", "CBS projected flip",
+  "Pennsylvania", "Governor", "Josh Shapiro", "Democratic", "Republican challenger", "Re-elected by about 22 points"
 )
 
 DT::datatable(
   key_races,
   rownames = FALSE,
   filter = "top",
-  options = list(
-    pageLength = 8,
-    dom = "tip",
-    order = list(),
-    autoWidth = TRUE
-  ),
+  options = list(pageLength = 8, dom = "tip", order = list(), autoWidth = TRUE),
   caption = htmltools::tags$caption(
     style = "caption-side: top; text-align: left;",
-    "Selected illustrative battlegrounds · filter any column"
+    "Selected outcomes · filter any column"
   )
 )
 ```
 
-## How to read this edition
-
-The historical chart is retrospective; the battleground comparisons and turnout page are planning scenarios, not a forecast or a statement of certified 2026 outcomes. A projected margin is measured in percentage points, with positive values favoring the Democratic candidate in the scenario. Replace the scenario inputs with linked, dated sources before using them as current reporting.
-
-::: {.callout-note}
-**A note on uncertainty.** A generic margin-of-error band is not a substitute for a poll's sample design, field dates, likely-voter model, or aggregation method. Scenario inputs on this site are labeled as such and should not be read as polling.
-:::
+The 2026 Senate result differs substantially from the earlier scenario numbers sometimes circulated online: CBS reported Democratic wins in Maine, North Carolina, Michigan, Ohio, Georgia, New Hampshire and Texas, while Republicans held Florida. See the [CBS results overview](https://www.cbsnews.com/news/2026-midterm-election-results-where-democrats-won/) and [Senate results page](https://www.cbsnews.com/live-updates/senate-election-results-2026/). Pennsylvania's Josh Shapiro is included as a governor's race; Abigail Spanberger's Virginia victory was in 2025, not a 2026 midterm race.

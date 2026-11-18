@@ -4,6 +4,7 @@ project:
 
 website:
   title: "The Midterm Ledger"
+  page-navigation: true
   navbar:
     background: dark
     foreground: light

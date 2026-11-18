@@ -4,49 +4,63 @@
     "href": "index.html",
     "title": "The 2026 Midterms, in context",
     "section": "",
-    "text": "Midterms are a national referendum with 435 local House contests, a smaller but consequential Senate map, and turnout that tends to lag presidential years. This edition pairs historical House results with an illustrative 2026 scenario: modeled figures are not reported polls, fundraising disclosures, or election returns."
+    "text": "THE MIDTERM LEDGER · ELECTION NIGHT TO THE COUNT\n\n\n\nDemocrats won control of both chambers, ending the Republican trifecta. Some vote counts were still incomplete in the latest reporting used here; estimates and projections are labeled rather than presented as certified totals."
   },
   {
-    "objectID": "index.html#the-midterm-pattern",
-    "href": "index.html#the-midterm-pattern",
+    "objectID": "index.html#chamber-balance-2024-to-2026",
+    "href": "index.html#chamber-balance-2024-to-2026",
     "title": "The 2026 Midterms, in context",
-    "section": "The midterm pattern",
-    "text": "The midterm pattern\nThe president’s party has usually lost House seats at the first election between presidential contests. The exceptions matter: national conditions, candidate quality, district boundaries, and the particular seats at stake can all overwhelm the average. The bars below show the House seat change for the president’s party; the line smooths the record with a five-election rolling average.\n\n\n\n\n\n\n\nHistorical series: net change in House seats for the president’s party at each midterm, compiled from official election results. A negative value is a loss. The rolling line begins after five observations."
+    "section": "Chamber balance: 2024 to 2026",
+    "text": "Chamber balance: 2024 to 2026\nThe 119th Congress convened with narrow Republican control. For the 120th Congress, CBS News projected a Democratic House range of 254–267 seats on Nov. 11 and later projected a 56–44 Democratic Senate after Alaska was called. The House bars show the midpoint of the reported range for visual comparison only; whiskers show its full range.\n\n\n\n\n\n\n\nThe 119th Congress composition reflects the post-2024 election starting balance (House: 215 Democrats, 220 Republicans; Senate: 47 Democratic caucus members, 53 Republicans). For 2026, the House range is CBS News’ Nov. 11 estimate and the Senate balance is CBS News’ Nov. 17 projection. Sources: CBS House and Senate overview, CBS Alaska Senate result. The 2026 House non-Democratic range is the mathematical remainder from 435; it is not labeled as an all-Republican count."
   },
   {
-    "objectID": "index.html#races-to-watch",
-    "href": "index.html#races-to-watch",
+    "objectID": "index.html#the-presidents-party-and-house-losses",
+    "href": "index.html#the-presidents-party-and-house-losses",
     "title": "The 2026 Midterms, in context",
-    "section": "Races to watch",
-    "text": "Races to watch\nThe table highlights a sample of Senate and House battlegrounds, not an exhaustive race list. Candidate names, polling margins, and fundraising amounts are intentionally omitted where this site has no verified live source; see the state comparison for clearly marked scenario inputs."
+    "section": "The president’s party and House losses",
+    "text": "The president’s party and House losses\nThe bars show House seat change for the president’s party at each midterm. The 2026 result is intentionally not plotted as an exact seat swing: available reporting confirms Democratic control but gives a range, not a final certified count.\n\n\n\n\n\n\n\nHistorical seat changes are the net change in House seats for the president’s party at midterm elections, compiled from official election results. 2018 is shown as a 41-seat Republican loss, consistent with the final House net change. The 2026 annotation is not a numeric result. Source context: Office of the Historian, U.S. House."
   },
   {
-    "objectID": "index.html#how-to-read-this-edition",
-    "href": "index.html#how-to-read-this-edition",
+    "objectID": "index.html#selected-2026-results",
+    "href": "index.html#selected-2026-results",
     "title": "The 2026 Midterms, in context",
-    "section": "How to read this edition",
-    "text": "How to read this edition\nThe historical chart is retrospective; the battleground comparisons and turnout page are planning scenarios, not a forecast or a statement of certified 2026 outcomes. A projected margin is measured in percentage points, with positive values favoring the Democratic candidate in the scenario. Replace the scenario inputs with linked, dated sources before using them as current reporting.\n\n\n\n\n\n\nNote\n\n\n\nA note on uncertainty. A generic margin-of-error band is not a substitute for a poll’s sample design, field dates, likely-voter model, or aggregation method. Scenario inputs on this site are labeled as such and should not be read as polling."
+    "section": "Selected 2026 results",
+    "text": "Selected 2026 results\nThese are projected outcomes reported by CBS News, not a substitute for state-certified canvasses. Percentages are included only where the cited source reported a dated figure; other vote totals are left out rather than inferred.\n\n\n\n\n\n\nThe 2026 Senate result differs substantially from the earlier scenario numbers sometimes circulated online: CBS reported Democratic wins in Maine, North Carolina, Michigan, Ohio, Georgia, New Hampshire and Texas, while Republicans held Florida. See the CBS results overview and Senate results page. Pennsylvania’s Josh Shapiro is included as a governor’s race; Abigail Spanberger’s Virginia victory was in 2025, not a 2026 midterm race."
   },
   {
     "objectID": "turnout-demographics.html",
     "href": "turnout-demographics.html",
-    "title": "Who votes—and who might turn out?",
+    "title": "Turnout and demographic shifts",
     "section": "",
-    "text": "Midterm participation is uneven. Age, education, and where a person lives are associated with different turnout rates, but the differences are not fixed from one election to the next. The chart combines rounded, illustrative benchmark estimates for 2018 and 2022 with a modeled 2026 scenario. None should be read as certified official demographic counts."
+    "text": "The 2026 midterms had the second-highest turnout rate of any midterm year since 1914, behind 2018, according to political scientist Michael McDonald as cited by the Brennan Center on Nov. 6. A final national rate and a complete set of voter-file records were not available in that report. The demographic comparisons below therefore use only published, clearly defined measures."
   },
   {
-    "objectID": "turnout-demographics.html#participation-by-group",
-    "href": "turnout-demographics.html#participation-by-group",
-    "title": "Who votes—and who might turn out?",
-    "section": "Participation by group",
-    "text": "Participation by group\nThe bars compare each group’s estimated turnout in the three midterm cycles. The 2026 values are scenario projections, not exit polls or post-election estimates. Group categories are broad and can conceal large differences within each group.\n\n\n\n\n\n\n\n\n\n\n\n\nImportant\n\n\n\nProjection ≠ result. The 2026 bars show a scenario assumption only. Turnout estimates depend on the population denominator, eligibility rules, survey design, and whether rates are measured among citizens, voting-age residents, or eligible voters."
+    "objectID": "turnout-demographics.html#national-turnout-trajectory",
+    "href": "turnout-demographics.html#national-turnout-trajectory",
+    "title": "Turnout and demographic shifts",
+    "section": "National turnout trajectory",
+    "text": "National turnout trajectory\nThe chart uses the U.S. Elections Project’s voting-eligible-population (VEP) estimates for 2018 and 2022. The 2026 value is not plotted because a comparable final rate was not available in the cited Nov. 6 reporting; its ranking is stated separately above.\n\n\n\n\n\n\n\nHistorical rates: U.S. Elections Project, VEP turnout estimates for 2018 and 2022. 2026 ranking: Brennan Center for Justice, Nov. 6, 2026. The ranking does not supply an exact national percentage."
   },
   {
-    "objectID": "turnout-demographics.html#what-the-comparison-canand-cannotshow",
-    "href": "turnout-demographics.html#what-the-comparison-canand-cannotshow",
-    "title": "Who votes—and who might turn out?",
-    "section": "What the comparison can—and cannot—show",
-    "text": "What the comparison can—and cannot—show\n\nAge: Older voters tend to participate at higher rates in midterms, so shifts in the age mix of the electorate can change the overall result even when group-level preferences stay constant.\nEducation: Educational attainment is associated with participation, but it is also correlated with age, income, geography, and other factors. These bars do not isolate a causal effect.\nCommunity type: Urban, suburban, and rural categories vary by definition and state. A national-style comparison can hide important local patterns.\n2026: Treat the final column as a transparent placeholder for a forecast. Replace it with a named, dated, documented source before drawing conclusions about the actual electorate.\n\n\nThe demographic values are deliberately rounded, synthetic examples. They are not sourced estimates, survey results, Census counts, or certified 2026 turnout. The chart demonstrates a comparison workflow and should be updated with documented data before publication as factual analysis."
+    "objectID": "turnout-demographics.html#latino-voters-presidential-vote-and-house-vote",
+    "href": "turnout-demographics.html#latino-voters-presidential-vote-and-house-vote",
+    "title": "Turnout and demographic shifts",
+    "section": "Latino voters: presidential vote and House vote",
+    "text": "Latino voters: presidential vote and House vote\nCBS News exit-poll graphics reported a larger Democratic share among Latino voters in 2026 than in 2024. The comparison is not like-for-like: 2024 is the presidential vote and 2026 is the House vote. Exit polls are estimates, not certified vote counts.\n\n\n\n\n\n\n\nPercentages read from the CBS News national exit-poll graphic for Latino voters. Shares are rounded; omitted percentage points reflect other candidates and rounding."
+  },
+  {
+    "objectID": "turnout-demographics.html#georgia-voter-file-participation-by-race",
+    "href": "turnout-demographics.html#georgia-voter-file-participation-by-race",
+    "title": "Turnout and demographic shifts",
+    "section": "Georgia voter-file participation, by race",
+    "text": "Georgia voter-file participation, by race\nPreliminary Georgia voter-file records showed a narrower Black–white turnout gap in 2026 than in any midterm election in the prior 20 years. Brennan Center reported two related cohort measures: the share of 2024 voters who did not return in 2026, and the share of 2026 voters who had also voted in 2024. They have different denominators, shown in separate panels.\n\n\n\n\n\n\n\nSource: Brennan Center for Justice, Nov. 6, 2026. These are Georgia registered-voter-file cohort measures, not national turnout rates or estimates for all eligible residents."
+  },
+  {
+    "objectID": "turnout-demographics.html#data-not-yet-comparable",
+    "href": "turnout-demographics.html#data-not-yet-comparable",
+    "title": "Turnout and demographic shifts",
+    "section": "Data not yet comparable",
+    "text": "Data not yet comparable\nThis edition does not plot 2026 national turnout by age, education, or urban/suburban/rural residence, nor does it provide a 2018–2026 demographic-margin series. The sources linked here do not provide a complete, consistently defined set of those measures. Exit polls, voter-file participation, and Census turnout rates describe different populations and should not be combined into a single trend without matching definitions."
   },
   {
     "objectID": "about.html",
@@ -58,29 +72,29 @@
   {
     "objectID": "swing-states.html",
     "href": "swing-states.html",
-    "title": "Battlegrounds: the close contests",
+    "title": "Battlegrounds: what the polls missed",
     "section": "",
-    "text": "The map is a mix of statewide Senate contests and competitive House districts. The figures below are synthetic scenario inputs designed to show how to compare races: they are not actual polls, campaign disclosures, or official Cook Political Report ratings. “Rating” is a Cook-style label for this demonstration only."
+    "text": "This page replaces pre-election scenarios with reported 2026 outcomes. Where public sources do not provide comparable final vote shares or race-level spending figures, those values are omitted rather than estimated."
   },
   {
-    "objectID": "swing-states.html#margin-and-uncertainty",
-    "href": "swing-states.html#margin-and-uncertainty",
-    "title": "Battlegrounds: the close contests",
-    "section": "Margin and uncertainty",
-    "text": "Margin and uncertainty\nThe dot is the scenario’s Democratic two-party margin; positive values favor the Democratic candidate. The horizontal interval shows an assumed ±4-point uncertainty band, not a poll’s published margin of error."
+    "objectID": "swing-states.html#polling-error-by-state",
+    "href": "swing-states.html#polling-error-by-state",
+    "title": "Battlegrounds: what the polls missed",
+    "section": "Polling error by state",
+    "text": "Polling error by state\nPew Research Center compared the final Democratic-minus-Republican polling average with unofficial vote counts as of Nov. 11, 2026. A positive value means the polls understated the Democratic margin. These are signed polling errors, not the candidates’ actual vote margins or poll averages.\n\n\n\n\n\n\n\nSource: Pew Research Center, “A First Look at Polling Performance in 2026”, updated Nov. 12. The results used in its calculations were unofficial counts available Nov. 11; some races were not final."
   },
   {
-    "objectID": "swing-states.html#fundraising-and-modeled-vote-share",
-    "href": "swing-states.html#fundraising-and-modeled-vote-share",
-    "title": "Battlegrounds: the close contests",
-    "section": "Fundraising and modeled vote share",
-    "text": "Fundraising and modeled vote share\nEach point is a race. The horizontal axis combines both candidates’ scenario fundraising totals; the vertical axis translates the assumed margin into a Democratic two-party vote share. A larger combined fundraising total does not imply a closer race or a causal effect on vote share.\n\n\n\n\n\n\n\nAll margins, uncertainty bands, fundraising totals, modeled shares, and ratings in these charts are fabricated for demonstration. State/race labels identify plausible contest types; candidates are intentionally unnamed. Fundraising is in illustrative millions of dollars, with no claim about actual receipts or disbursements."
+    "objectID": "swing-states.html#how-the-selected-senate-outcomes-break-down-by-region",
+    "href": "swing-states.html#how-the-selected-senate-outcomes-break-down-by-region",
+    "title": "Battlegrounds: what the polls missed",
+    "section": "How the selected Senate outcomes break down by region",
+    "text": "How the selected Senate outcomes break down by region\nThe eight states below are a selected set, not every competitive Senate contest. The chart counts reported winners by party; it does not represent vote share or regional vote swing.\n\n\n\n\n\n\nCBS News projected Democratic wins in Maine (Troy Jackson), North Carolina (Roy Cooper), Michigan (Abdul El-Sayed), Ohio (Sherrod Brown), Georgia (Jon Ossoff), New Hampshire (Chris Pappas), and Texas (James Talarico). Republican Ashley Moody held Florida. See the CBS results overview and Senate results page."
   },
   {
-    "objectID": "swing-states.html#scenario-inputs",
-    "href": "swing-states.html#scenario-inputs",
-    "title": "Battlegrounds: the close contests",
-    "section": "Scenario inputs",
-    "text": "Scenario inputs\n\n\n\nState\nExample contest\nRating label\nScenario margin\n\n\n\n\nPennsylvania\nPA-07 (House)\nToss-up\n+1.5 pp\n\n\nMichigan\nSenate\nToss-up\n+2.0 pp\n\n\nWisconsin\nWI-03 (House)\nLean R\n−1.0 pp\n\n\nArizona\nAZ-01 (House)\nToss-up\n+0.5 pp\n\n\nGeorgia\nSenate\nToss-up\n−0.5 pp\n\n\nNevada\nNV-03 (House)\nToss-up\n+1.0 pp\n\n\nNorth Carolina\nSenate\nLean R\n−2.0 pp\n\n\nOhio\nSenate\nLean R\n−3.0 pp\n\n\n\nThese are a teaching dataset, not a ranking. A serious race comparison should date each poll and finance report, distinguish candidate committees from outside spending, and document the rating source."
+    "objectID": "swing-states.html#political-advertising-cycle-level-context",
+    "href": "swing-states.html#political-advertising-cycle-level-context",
+    "title": "Battlegrounds: what the polls missed",
+    "section": "Political advertising: cycle-level context",
+    "text": "Political advertising: cycle-level context\nRace-level candidate fundraising, independent expenditures, and vote shares are reported through different systems and periods. The comparable total available here is political advertising, not all campaign or outside spending. AdImpact estimates reported by Deadline put 2026 cycle ad spending at $12.06 billion, versus $11.2 billion in 2024. The two-cycle comparison is context, not evidence that spending caused a result.\n\n\n\n\n\n\n\nSource: Deadline, “Political Ad Spending On 2025–26 Cycle Topped $12 Billion”, citing AdImpact. Ad spending is a media-market estimate and is not interchangeable with FEC candidate receipts, disbursements, or independent expenditures."
   }
 ]

@@ -1,17 +1,17 @@
 ---
-title: "Battlegrounds: the close contests"
-subtitle: "Eight state-level snapshots · scenario data, not live polling"
-description: "Illustrative Senate and House battleground margins and campaign finance comparisons."
+title: "Battlegrounds: what the polls missed"
+subtitle: "Selected 2026 Senate contests · results and polling errors"
+description: "Verified Senate outcomes and dated polling-error estimates for eight battleground states."
 ---
 
-The map is a mix of statewide Senate contests and competitive House districts. The figures below are **synthetic scenario inputs** designed to show how to compare races: they are not actual polls, campaign disclosures, or official Cook Political Report ratings. “Rating” is a Cook-style label for this demonstration only.
+This page replaces pre-election scenarios with reported 2026 outcomes. Where public sources do not provide comparable final vote shares or race-level spending figures, those values are omitted rather than estimated.
 
-## Margin and uncertainty
+## Polling error by state
 
-The dot is the scenario's Democratic two-party margin; positive values favor the Democratic candidate. The horizontal interval shows an assumed ±4-point uncertainty band, not a poll's published margin of error.
+Pew Research Center compared the final Democratic-minus-Republican polling average with unofficial vote counts as of Nov. 11, 2026. A positive value means the polls understated the Democratic margin. These are **signed polling errors**, not the candidates' actual vote margins or poll averages.
 
 ```{r}
-#| label: battleground-data
+#| label: polling-error
 #| echo: false
 #| warning: false
 #| message: false
@@ -19,116 +19,154 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 
-battlegrounds <- tribble(
-  ~state, ~race, ~office, ~dem_candidate, ~rep_candidate, ~margin, ~uncertainty, ~dem_funds, ~rep_funds, ~rating,
-  "PA", "PA-07", "House", "Democratic candidate", "Republican candidate", 1.5, 4.0, 5.2, 6.1, "Toss-up",
-  "MI", "Senate", "Senate", "Democratic candidate", "Republican candidate", 2.0, 3.8, 24.0, 21.5, "Toss-up",
-  "WI", "WI-03", "House", "Democratic candidate", "Republican candidate", -1.0, 4.2, 3.8, 4.7, "Lean R",
-  "AZ", "AZ-01", "House", "Democratic candidate", "Republican candidate", 0.5, 4.1, 4.5, 5.0, "Toss-up",
-  "GA", "Senate", "Senate", "Democratic candidate", "Republican candidate", -0.5, 4.0, 19.0, 22.0, "Toss-up",
-  "NV", "NV-03", "House", "Democratic candidate", "Republican candidate", 1.0, 4.3, 5.0, 4.4, "Toss-up",
-  "NC", "Senate", "Senate", "Democratic candidate", "Republican candidate", -2.0, 4.0, 17.0, 23.0, "Lean R",
-  "OH", "Senate", "Senate", "Democratic candidate", "Republican candidate", -3.0, 4.2, 15.0, 26.0, "Lean R"
+poll_error <- tribble(
+  ~state, ~error,
+  "Texas", 8.9,
+  "Georgia", 8.9,
+  "North Carolina", 8.5,
+  "New Hampshire", 5.4,
+  "Florida", 3.3,
+  "Maine", 2.1,
+  "Ohio", 2.0,
+  "Michigan", 1.8
 ) |>
   mutate(
-    race_label = paste(state, race, sep = " · "),
-    dem_share = 50 + margin / 2,
-    total_funds = dem_funds + rep_funds,
-    funding_leader = if_else(dem_funds >= rep_funds, "Democratic", "Republican"),
-    hover = paste0(
-      race_label,
-      "<br>Combined scenario funds: $", round(total_funds, 1), "m",
-      "<br>Modeled Democratic share: ", round(dem_share, 1), "%",
-      "<br>Democratic funds: $", dem_funds, "m",
-      "<br>Republican funds: $", rep_funds, "m"
-    )
+    state = fct_reorder(state, error),
+    hover = paste0(state, "<br>Polling error: +", error,
+                   " points<br>Polls understated the Democratic margin")
   )
 
-margin_chart <- plot_ly(
-  data = battlegrounds,
-  x = ~margin,
-  y = ~reorder(race_label, margin),
+poll_error_plot <- plot_ly(
+  data = poll_error,
+  x = ~error,
+  y = ~state,
   type = "scatter",
   mode = "markers",
-  color = ~office,
-  colors = c("Senate" = "#c7473a", "House" = "#187f78"),
-  error_x = list(
-    type = "data",
-    array = battlegrounds$uncertainty,
-    visible = TRUE,
-    color = "#7b8794",
-    thickness = 1.5,
-    width = 5
-  ),
-  marker = list(size = 12),
-  text = ~paste0(
-    race_label,
-    "<br>Scenario Democratic margin: ", if_else(margin > 0, "+", ""), margin, " pp",
-    "<br>Assumed uncertainty: ±", uncertainty, " pp",
-    "<br>Illustrative rating: ", rating
-  ),
-  hoverinfo = "text"
-) |>
-  layout(
-    xaxis = list(title = "Democratic two-party margin (percentage points)", zeroline = TRUE, zerolinecolor = "#243b53"),
-    yaxis = list(title = NULL),
-    legend = list(orientation = "h", x = 0, y = 1.12),
-    margin = list(l = 120, t = 25),
-    hovermode = "closest"
-  ) |>
-  config(displayModeBar = FALSE, responsive = TRUE)
-
-margin_chart
-```
-
-## Fundraising and modeled vote share
-
-Each point is a race. The horizontal axis combines both candidates' scenario fundraising totals; the vertical axis translates the assumed margin into a Democratic two-party vote share. A larger combined fundraising total does not imply a closer race or a causal effect on vote share.
-
-```{r}
-#| label: fundraising-scatter
-#| echo: false
-#| warning: false
-#| message: false
-fundraising_chart <- plot_ly(
-  data = battlegrounds,
-  x = ~total_funds,
-  y = ~dem_share,
-  type = "scatter",
-  mode = "markers",
-  color = ~rating,
-  colors = c("Toss-up" = "#c7473a", "Lean R" = "#187f78"),
+  marker = list(size = 13, color = "#1d4ed8", line = list(color = "white", width = 1)),
   text = ~hover,
-  marker = list(size = 15, line = list(color = "white", width = 1)),
   hoverinfo = "text"
 ) |>
+  add_segments(
+    x = 0, xend = ~error, y = ~state, yend = ~state,
+    inherit = FALSE,
+    line = list(color = "#94a3b8", width = 3),
+    showlegend = FALSE,
+    hoverinfo = "skip"
+  ) |>
   layout(
-    xaxis = list(title = "Combined candidate fundraising (illustrative $ millions)"),
-    yaxis = list(title = "Modeled Democratic two-party vote share (%)", range = c(45, 55)),
-    legend = list(title = list(text = "Illustrative rating")),
-    margin = list(t = 20),
-    hovermode = "closest"
+    xaxis = list(title = "Polling error (percentage points)", rangemode = "tozero"),
+    yaxis = list(title = NULL),
+    margin = list(l = 125, t = 20, b = 55),
+    annotations = list(
+      list(x = 0, y = 1.08, xref = "x", yref = "paper",
+           text = "0 = no polling error", showarrow = FALSE,
+           xanchor = "left", font = list(size = 11, color = "#64748b"))
+    )
   ) |>
   config(displayModeBar = FALSE, responsive = TRUE)
 
-fundraising_chart
+poll_error_plot
 ```
 
 ::: {.source-note}
-All margins, uncertainty bands, fundraising totals, modeled shares, and ratings in these charts are fabricated for demonstration. State/race labels identify plausible contest types; candidates are intentionally unnamed. Fundraising is in illustrative millions of dollars, with no claim about actual receipts or disbursements.
+Source: [Pew Research Center, “A First Look at Polling Performance in 2026”](https://www.pewresearch.org/short-reads/2026/11/12/a-first-look-at-polling-performance-in-2026/), updated Nov. 12. The results used in its calculations were unofficial counts available Nov. 11; some races were not final.
 :::
 
-## Scenario inputs
+## How the selected Senate outcomes break down by region
 
-| State | Example contest | Rating label | Scenario margin |
-|:--|:--|:--|--:|
-| Pennsylvania | PA-07 (House) | Toss-up | +1.5 pp |
-| Michigan | Senate | Toss-up | +2.0 pp |
-| Wisconsin | WI-03 (House) | Lean R | −1.0 pp |
-| Arizona | AZ-01 (House) | Toss-up | +0.5 pp |
-| Georgia | Senate | Toss-up | −0.5 pp |
-| Nevada | NV-03 (House) | Toss-up | +1.0 pp |
-| North Carolina | Senate | Lean R | −2.0 pp |
-| Ohio | Senate | Lean R | −3.0 pp |
+The eight states below are a selected set, not every competitive Senate contest. The chart counts reported winners by party; it does not represent vote share or regional vote swing.
 
-These are a teaching dataset, not a ranking. A serious race comparison should date each poll and finance report, distinguish candidate committees from outside spending, and document the rating source.
+```{r}
+#| label: regional-results
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(plotly)
+
+regional_results <- tribble(
+  ~state, ~region, ~winner_party,
+  "Maine", "Northeast", "Democratic",
+  "New Hampshire", "Northeast", "Democratic",
+  "Michigan", "Rust Belt", "Democratic",
+  "Ohio", "Rust Belt", "Democratic",
+  "North Carolina", "Sun Belt", "Democratic",
+  "Georgia", "Sun Belt", "Democratic",
+  "Texas", "Sun Belt", "Democratic",
+  "Florida", "Sun Belt", "Republican"
+) |>
+  count(region, winner_party, name = "races") |>
+  complete(region, winner_party, fill = list(races = 0)) |>
+  mutate(
+    region = factor(region, levels = c("Northeast", "Rust Belt", "Sun Belt")),
+    hover = paste0(region, "<br>", winner_party, " wins: ", races, " of selected races")
+  )
+
+regional_plot <- plot_ly(
+  data = regional_results,
+  x = ~region,
+  y = ~races,
+  color = ~winner_party,
+  colors = c("Democratic" = "#1d4ed8", "Republican" = "#b91c1c"),
+  type = "bar",
+  text = ~hover,
+  hoverinfo = "text"
+) |>
+  layout(
+    barmode = "stack",
+    xaxis = list(title = NULL),
+    yaxis = list(title = "Selected Senate races won", dtick = 1),
+    legend = list(orientation = "h", x = 0, y = 1.12),
+    margin = list(t = 30, b = 45)
+  ) |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+
+regional_plot
+```
+
+CBS News projected Democratic wins in Maine (Troy Jackson), North Carolina (Roy Cooper), Michigan (Abdul El-Sayed), Ohio (Sherrod Brown), Georgia (Jon Ossoff), New Hampshire (Chris Pappas), and Texas (James Talarico). Republican Ashley Moody held Florida. See the [CBS results overview](https://www.cbsnews.com/news/2026-midterm-election-results-where-democrats-won/) and [Senate results page](https://www.cbsnews.com/live-updates/senate-election-results-2026/).
+
+## Political advertising: cycle-level context
+
+Race-level candidate fundraising, independent expenditures, and vote shares are reported through different systems and periods. The comparable total available here is **political advertising**, not all campaign or outside spending. AdImpact estimates reported by Deadline put 2026 cycle ad spending at $12.06 billion, versus $11.2 billion in 2024. The two-cycle comparison is context, not evidence that spending caused a result.
+
+```{r}
+#| label: ad-spending
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(plotly)
+
+ad_spending <- tribble(
+  ~cycle, ~spending, ~source_date,
+  "2024 presidential cycle", 11.2, "Reported 2026",
+  "2026 midterm cycle", 12.06, "Reported Nov. 2026"
+) |>
+  mutate(
+    hover = paste0(cycle, "<br>Estimated political ad spending: $",
+                   spending, " billion<br>AdImpact estimate")
+  )
+
+ad_spending_plot <- plot_ly(
+  data = ad_spending,
+  x = ~cycle,
+  y = ~spending,
+  type = "bar",
+  marker = list(color = c("#64748b", "#1d4ed8")),
+  text = ~hover,
+  hoverinfo = "text"
+) |>
+  layout(
+    xaxis = list(title = NULL),
+    yaxis = list(title = "Estimated political advertising ($ billions)", rangemode = "tozero"),
+    margin = list(t = 20, b = 55)
+  ) |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+
+ad_spending_plot
+```
+
+::: {.source-note}
+Source: [Deadline, “Political Ad Spending On 2025–26 Cycle Topped $12 Billion”](https://deadline.com/2026/11/midterm-ad-spending-record-1237226451/), citing AdImpact. Ad spending is a media-market estimate and is not interchangeable with FEC candidate receipts, disbursements, or independent expenditures.
+:::

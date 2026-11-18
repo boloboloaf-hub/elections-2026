@@ -1,17 +1,17 @@
 ---
-title: "Who votes—and who might turn out?"
-subtitle: "Age, education, and place · historical-style benchmarks and a 2026 scenario"
-description: "Illustrative midterm turnout rates by age, educational attainment, and community type."
+title: "Turnout and demographic shifts"
+subtitle: "What 2026 sources can—and cannot—tell us"
+description: "Verified turnout context and demographic comparisons from the 2026 midterms."
 ---
 
-Midterm participation is uneven. Age, education, and where a person lives are associated with different turnout rates, but the differences are not fixed from one election to the next. The chart combines rounded, **illustrative benchmark estimates** for 2018 and 2022 with a **modeled 2026 scenario**. None should be read as certified official demographic counts.
+The 2026 midterms had the second-highest turnout rate of any midterm year since 1914, behind 2018, according to political scientist Michael McDonald as cited by the Brennan Center on Nov. 6. A final national rate and a complete set of voter-file records were not available in that report. The demographic comparisons below therefore use only published, clearly defined measures.
 
-## Participation by group
+## National turnout trajectory
 
-The bars compare each group's estimated turnout in the three midterm cycles. The 2026 values are scenario projections, not exit polls or post-election estimates. Group categories are broad and can conceal large differences within each group.
+The chart uses the U.S. Elections Project's voting-eligible-population (VEP) estimates for 2018 and 2022. The 2026 value is not plotted because a comparable final rate was not available in the cited Nov. 6 reporting; its ranking is stated separately above.
 
 ```{r}
-#| label: turnout-data
+#| label: turnout-trajectory
 #| echo: false
 #| warning: false
 #| message: false
@@ -19,102 +19,177 @@ library(tidyverse)
 library(ggplot2)
 library(plotly)
 
-turnout <- tribble(
-  ~dimension, ~group, ~year, ~turnout,
-  "Age", "18–29", 2018, 36,
-  "Age", "18–29", 2022, 31,
-  "Age", "18–29", 2026, 37,
-  "Age", "30–44", 2018, 47,
-  "Age", "30–44", 2022, 43,
-  "Age", "30–44", 2026, 48,
-  "Age", "45–64", 2018, 58,
-  "Age", "45–64", 2022, 54,
-  "Age", "45–64", 2026, 59,
-  "Age", "65+", 2018, 66,
-  "Age", "65+", 2022, 64,
-  "Age", "65+", 2026, 67,
-  "Education", "High school or less", 2018, 42,
-  "Education", "High school or less", 2022, 39,
-  "Education", "High school or less", 2026, 43,
-  "Education", "Some college", 2018, 49,
-  "Education", "Some college", 2022, 45,
-  "Education", "Some college", 2026, 50,
-  "Education", "Bachelor's degree", 2018, 60,
-  "Education", "Bachelor's degree", 2022, 56,
-  "Education", "Bachelor's degree", 2026, 61,
-  "Education", "Graduate degree", 2018, 66,
-  "Education", "Graduate degree", 2022, 63,
-  "Education", "Graduate degree", 2026, 67,
-  "Community type", "Urban", 2018, 49,
-  "Community type", "Urban", 2022, 45,
-  "Community type", "Urban", 2026, 50,
-  "Community type", "Suburban", 2018, 57,
-  "Community type", "Suburban", 2022, 53,
-  "Community type", "Suburban", 2026, 58,
-  "Community type", "Rural", 2018, 54,
-  "Community type", "Rural", 2022, 51,
-  "Community type", "Rural", 2026, 55
+turnout_history <- tribble(
+  ~year, ~rate,
+  2018, 50.0,
+  2022, 46.6
 ) |>
   mutate(
-    year = factor(year, levels = c(2018, 2022, 2026)),
-    group = factor(group, levels = unique(group)),
-    status = if_else(year == "2026", "Projection", "Illustrative benchmark"),
-    hover = paste0(
-      dimension, ": ", group,
-      "<br>", year, if_else(year == "2026", " projection", " benchmark"),
-      "<br>Illustrative turnout: ", turnout, "%"
-    )
+    hover = paste0(year, "<br>Estimated VEP turnout: ", rate, "%")
   )
 
-turnout_plot <- ggplot(
-  turnout,
-  aes(x = group, y = turnout, fill = year, text = hover)
+turnout_history_plot <- ggplot(
+  turnout_history,
+  aes(x = year, y = rate, text = hover)
 ) +
-  geom_col(position = position_dodge(width = 0.8), width = 0.68) +
-  facet_wrap(~dimension, scales = "free_x", nrow = 1) +
-  scale_fill_manual(
-    values = c("2018" = "#243b53", "2022" = "#187f78", "2026" = "#e7a63f"),
-    name = "Midterm"
-  ) +
+  geom_line(color = "#1d4ed8", linewidth = 1.2) +
+  geom_point(color = "#1d4ed8", size = 4) +
+  geom_text(aes(label = paste0(rate, "%")), vjust = -1, color = "#172554") +
+  scale_x_continuous(breaks = c(2018, 2022)) +
   scale_y_continuous(
-    limits = c(0, 75),
-    breaks = seq(0, 75, by = 15),
-    labels = \(x) paste0(x, "%"),
-    expand = expansion(mult = c(0, 0.03))
+    limits = c(40, 55),
+    breaks = seq(40, 55, 5),
+    labels = \(x) paste0(x, "%")
   ) +
   labs(
     x = NULL,
-    y = "Illustrative turnout rate",
-    title = "Participation varies across age, education, and community",
-    subtitle = "2026 is a modeled scenario; 2018 and 2022 are illustrative benchmarks",
-    caption = "Scenario values are for demonstration, not official demographic estimates."
+    y = "Voting-eligible population turnout",
+    title = "National midterm turnout, 2018 and 2022",
+    subtitle = "2026 is not assigned a rate until a comparable estimate is published"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", color = "#172554")
+  )
+
+ggplotly(turnout_history_plot, tooltip = "text") |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+```
+
+::: {.source-note}
+Historical rates: [U.S. Elections Project](https://www.electproject.org/), VEP turnout estimates for 2018 and 2022. 2026 ranking: [Brennan Center for Justice, Nov. 6, 2026](https://www.brennancenter.org/our-work/analysis-opinion/surprising-turnout-rates-2026-midterms). The ranking does not supply an exact national percentage.
+:::
+
+## Latino voters: presidential vote and House vote
+
+CBS News exit-poll graphics reported a larger Democratic share among Latino voters in 2026 than in 2024. The comparison is **not like-for-like**: 2024 is the presidential vote and 2026 is the House vote. Exit polls are estimates, not certified vote counts.
+
+```{r}
+#| label: latino-vote
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+latino_vote <- tribble(
+  ~election, ~office, ~party, ~share,
+  "2024", "President", "Democratic", 51,
+  "2024", "President", "Republican", 46,
+  "2026", "U.S. House", "Democratic", 64,
+  "2026", "U.S. House", "Republican", 34
+) |>
+  mutate(
+    election = factor(election, levels = c("2024", "2026")),
+    hover = paste0(election, " ", office, "<br>Latino voters: ",
+                   party, " candidate ", share, "%")
+  )
+
+latino_plot <- ggplot(
+  latino_vote,
+  aes(x = election, y = share, fill = party, text = hover)
+) +
+  geom_col(position = position_dodge(width = 0.72), width = 0.62) +
+  geom_text(
+    aes(label = paste0(share, "%")),
+    position = position_dodge(width = 0.72),
+    vjust = -0.35,
+    size = 3.5
+  ) +
+  facet_wrap(~office, nrow = 1) +
+  scale_fill_manual(
+    values = c("Democratic" = "#1d4ed8", "Republican" = "#b91c1c")
+  ) +
+  scale_y_continuous(limits = c(0, 75), breaks = seq(0, 75, 15),
+                     labels = \(x) paste0(x, "%")) +
+  labs(
+    x = NULL,
+    y = "Share of Latino voters",
+    fill = NULL,
+    title = "Democratic vote share among Latino voters",
+    subtitle = "Different contests; exit-poll estimates"
   ) +
   theme_minimal(base_size = 12) +
   theme(
     legend.position = "top",
     panel.grid.minor = element_blank(),
-    panel.grid.major.x = element_blank(),
-    strip.text = element_text(face = "bold", color = "#243b53"),
-    axis.text.x = element_text(angle = 25, hjust = 1),
-    plot.title = element_text(face = "bold", color = "#243b53")
+    plot.title = element_text(face = "bold", color = "#172554"),
+    strip.text = element_text(face = "bold")
   )
 
-ggplotly(turnout_plot, tooltip = "text") |>
-  layout(legend = list(orientation = "h", x = 0, y = 1.15)) |>
+ggplotly(latino_plot, tooltip = "text") |>
   config(displayModeBar = FALSE, responsive = TRUE)
 ```
 
-::: {.callout-important}
-**Projection ≠ result.** The 2026 bars show a scenario assumption only. Turnout estimates depend on the population denominator, eligibility rules, survey design, and whether rates are measured among citizens, voting-age residents, or eligible voters.
+::: {.source-note}
+Percentages read from the [CBS News national exit-poll graphic for Latino voters](https://www.cbsnews.com/news/cbs-news-exit-polls-midterm-elections-2026/). Shares are rounded; omitted percentage points reflect other candidates and rounding.
 :::
 
-## What the comparison can—and cannot—show
+## Georgia voter-file participation, by race
 
-- **Age:** Older voters tend to participate at higher rates in midterms, so shifts in the age mix of the electorate can change the overall result even when group-level preferences stay constant.
-- **Education:** Educational attainment is associated with participation, but it is also correlated with age, income, geography, and other factors. These bars do not isolate a causal effect.
-- **Community type:** Urban, suburban, and rural categories vary by definition and state. A national-style comparison can hide important local patterns.
-- **2026:** Treat the final column as a transparent placeholder for a forecast. Replace it with a named, dated, documented source before drawing conclusions about the actual electorate.
+Preliminary Georgia voter-file records showed a narrower Black–white turnout gap in 2026 than in any midterm election in the prior 20 years. Brennan Center reported two related cohort measures: the share of 2024 voters who did not return in 2026, and the share of 2026 voters who had also voted in 2024. They have different denominators, shown in separate panels.
+
+```{r}
+#| label: georgia-cohorts
+#| echo: false
+#| warning: false
+#| message: false
+library(tidyverse)
+library(ggplot2)
+library(plotly)
+
+georgia_participation <- tribble(
+  ~measure, ~race, ~share,
+  "2024 voters who did not vote in 2026", "White", 29,
+  "2024 voters who did not vote in 2026", "Black", 24,
+  "2026 voters who also voted in 2024", "White", 93,
+  "2026 voters who also voted in 2024", "Black", 87
+) |>
+  mutate(
+    measure = factor(
+      measure,
+      levels = c(
+        "2024 voters who did not vote in 2026",
+        "2026 voters who also voted in 2024"
+      )
+    ),
+    hover = paste0("Georgia · ", race, "<br>", measure, ": ", share, "%")
+  )
+
+georgia_plot <- ggplot(
+  georgia_participation,
+  aes(x = race, y = share, fill = race, text = hover)
+) +
+  geom_col(width = 0.58) +
+  geom_text(aes(label = paste0(share, "%")), vjust = -0.35) +
+  facet_wrap(~measure, nrow = 1, scales = "free_y") +
+  scale_fill_manual(values = c("White" = "#64748b", "Black" = "#1d4ed8")) +
+  scale_y_continuous(limits = c(0, 100), breaks = seq(0, 100, 25),
+                     labels = \(x) paste0(x, "%")) +
+  labs(
+    x = NULL,
+    y = "Share of voter-file cohort",
+    title = "Turnout continuity among Georgia voters",
+    subtitle = "Two different voter-file denominators; preliminary data"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "none",
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", color = "#172554"),
+    strip.text = element_text(face = "bold")
+  )
+
+ggplotly(georgia_plot, tooltip = "text") |>
+  config(displayModeBar = FALSE, responsive = TRUE)
+```
 
 ::: {.source-note}
-The demographic values are deliberately rounded, synthetic examples. They are not sourced estimates, survey results, Census counts, or certified 2026 turnout. The chart demonstrates a comparison workflow and should be updated with documented data before publication as factual analysis.
+Source: [Brennan Center for Justice, Nov. 6, 2026](https://www.brennancenter.org/our-work/analysis-opinion/surprising-turnout-rates-2026-midterms). These are Georgia registered-voter-file cohort measures, not national turnout rates or estimates for all eligible residents.
 :::
+
+## Data not yet comparable
+
+This edition does not plot 2026 national turnout by age, education, or urban/suburban/rural residence, nor does it provide a 2018–2026 demographic-margin series. The sources linked here do not provide a complete, consistently defined set of those measures. Exit polls, voter-file participation, and Census turnout rates describe different populations and should not be combined into a single trend without matching definitions.
